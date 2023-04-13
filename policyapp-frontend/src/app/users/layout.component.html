@@ -1,0 +1,62 @@
+<!-- <app-header></app-header> -->
+<style>
+  .welcome-user{
+    padding:10px;
+    background:#f3f3f3;
+    display:flex;
+    align-items:center;
+    justify-content:right;
+  }
+  .subheader-item{
+    padding: 10px;
+    border-right: 1px solid #ccc;
+    height: 100%;
+    cursor:pointer;
+  }
+  .subheader-item-last{
+    margin-right: 15px;
+  }
+  .header-logo{
+    display: block;
+    height: 40px;
+    background-image: url(/assets/logo.png);
+    background-color: black;
+    background-size: contain;
+    width: 35px!important;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    background-repeat: no-repeat;
+    position: absolute;
+    left: 10px;
+  }
+  .header-logo-text{
+    position: absolute;
+  left: 50px;
+  font-size: 20px;
+  }
+  </style>
+<div class="welcome-user">
+  <div class="header-logo">
+  </div>
+  <div class="header-logo-text">
+    <b>Experiya</b>
+    </div>
+  <div class="subheader-item" (click)="redirectToHome()">
+    <b>HOME</b>
+  </div>
+  <div class="subheader-item subheader-item-last" (click)="redirectToCases()">
+    <b>CASES</b>
+  </div>
+  Welcome {{currentUser.firstName}} {{currentUser.lastName}} &nbsp; <b>({{currentUser.role}})</b> &nbsp;
+  &nbsp;
+  &nbsp;
+  <div class="logut">
+    <button type="button" name="button" (click)="logout()">Logut</button>
+  </div>
+</div>
+<div class="p-4">
+    <div class="container">
+        <router-outlet></router-outlet>
+    </div>
+</div>

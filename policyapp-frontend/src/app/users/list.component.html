@@ -1,0 +1,487 @@
+<style media="screen">
+  .policyBtn-container{
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    background-color: aliceblue;
+    padding: 5px;
+  }
+  .policyBtn{
+    padding: 10px 40px;
+    margin: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  .policyType-container{
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    background-color: aliceblue;
+    padding: 20px;
+  }
+  .policyTypeBtn{
+    padding: 5px 10px;
+    margin: 4px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+  }
+  .leadCard{
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    margin: 10px;
+    background-color: #f57e7e;
+    flex:1;
+  }
+  .mainLeadCard{
+    display: flex;
+  align-items: center;
+  justify-content: space-between;
+  }
+  .mainLeadBtn{
+    padding: 30px;
+    border: 0px;
+    border-radius: 5px;
+    background-color: #000000;
+    color: #fff;
+  }
+  .policyDiv{
+    padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  }
+  .policy-form{
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 35px;
+    margin:20px 5px;
+  }
+  .policy-form-dropdown{
+    display: flex;
+    justify-content: left;
+    border: 1px solid #ccc;
+  }
+  .policy-form-dropdown > button{
+    background-color: #fff!important;
+  border: none;
+  color: black;
+  width: 100%;
+text-align: left;
+  }
+  .policy-form-d-scrollable-div{
+    max-height: 150px;
+    overflow: auto;
+  }
+  .policy-form-d-menu{
+    width: 100%;
+  }
+  .policy-form-d-menu input{
+    width:100%;
+    border:0px;
+    border-bottom: 1px solid #ccc;
+    padding:4px;
+  }
+  .policy-form-d-menu-div{
+    position:relative;
+  }
+  .policy-form-d-menu li{
+    padding:5px;
+  }
+  .policy-form-d-menu li:hover{
+    background-color:#f3f3f3!important;
+    cursor:pointer;
+  }
+  .policy-or{
+    display: flex;
+  align-items: center;
+  justify-content: center;
+  }
+  .policy-auto{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+        margin: 15px 0px;
+  }
+  .policy-reg-num{
+    display: grid;
+grid-template-columns: 1fr 1fr;
+grid-gap: 15px;
+  }
+  .policy-reg-num input{
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  .activeBtn{
+    background-color: #F3f3f3;
+    border: 1px solid;
+  }
+  .inputPolicy{
+    width:100%;
+    border:0px;
+    height:100%;
+  }
+  .rtoBtn{
+    padding:0px;
+  }
+  .vehicleType{
+    color: cadetblue;
+  }
+</style>
+<ng-container *ngIf="currentUser.role == 'admin'">
+﻿<h1>All Users</h1>
+<a routerLink="add" class="btn btn-sm btn-success mb-2">Add User</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th style="width: 30%">First Name</th>
+            <th style="width: 30%">Last Name</th>
+            <th style="width: 30%">Username</th>
+            <th style="width: 10%"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let user of users">
+            <td>{{user.firstName}}</td>
+            <td>{{user.lastName}}</td>
+            <td>{{user.username}}</td>
+            <td style="white-space: nowrap">
+                <a routerLink="edit/{{user.id}}" class="btn btn-sm mr-1">Edit</a>
+                <button (click)="deleteUser(user.id)" class="btn btn-sm btn-danger btn-delete-user" [disabled]="user.isDeleting">
+                    <span *ngIf="user.isDeleting" class="spinner-border spinner-border-sm"></span>
+                    <span *ngIf="!user.isDeleting">Delete</span>
+                </button>
+            </td>
+        </tr>
+        <tr *ngIf="!users">
+            <td colspan="4" class="text-center">
+                <span class="spinner-border spinner-border-lg align-center"></span>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</ng-container>
+
+<ng-container *ngIf="currentUser.role == 'lead'">
+  <div class="policyBtn-container">
+  <button class="policyBtn" type="button" name="button" (click)="vehicleType = 1" [ngClass]="{'activeBtn':vehicleType == 1}"><div>Bike</div></button>
+  <button class="policyBtn" type="button" name="button" (click)="vehicleType = 0" [ngClass]="{'activeBtn':vehicleType == 0}"><div>Car</div></button>
+  <button class="policyBtn" type="button" name="button" (click)="vehicleType = 2" [ngClass]="{'activeBtn':vehicleType == 2}"><div>Commerical</div></button>
+  </div>
+  <h1>Get Plans for <h3 class="vehicleType">{{vehicleMapper[vehicleType]}}</h3> from Multiple Insurers</h1>
+  <div class="policyDiv" >
+    <h3>Plan type</h3>
+      <div class="policy-container">
+      <button class="policyTypeBtn" type="button" name="button" (click)="insurranceType = 0" [ngClass]="{'activeBtn':insurranceType == 0}"><div>Renew Insurance</div></button>
+      <button class="policyTypeBtn" type="button" name="button" (click)="insurranceType = 1" [ngClass]="{'activeBtn':insurranceType == 1}"><div>Used Car</div></button>
+      <button class="policyTypeBtn" type="button" name="button" (click)="insurranceType = 2" [ngClass]="{'activeBtn':insurranceType == 2}"><div>Policy Expired</div></button>
+      </div>
+      <div class="policy-auto">
+        <div>Fetch Details :</div>
+        <div class="policy-reg-num">
+          <input type="text" name="" value="" placeholder="By Registration Number" #regNo>
+          <button type="button" name="button" class="btn btn-danger" (click)="fetchVehicleDetails(regNo.value)">Submit</button>
+        </div>
+      </div>
+      <div class="policy-or">
+        Or Enter Manually
+        </div>
+        <ng-container *ngIf="vehicleType == 0">
+      <div class="policy-form">
+        <div class="dropdown policy-form-dropdown">
+         <button class="btn dropdown-toggle rtoBtn" type="button" data-toggle="dropdown">
+           <ng-container *ngIf="policyFormData.rto != ''">
+             {{policyFormData.rto}}
+             </ng-container>
+             <ng-container *ngIf="policyFormData.rto == ''">
+               RTO
+             </ng-container>
+           <span class="caret"></span>
+         </button>
+         <ul role="listbox" class="dropdown-menu policy-form-d-menu">
+           <ng-container *ngFor="let itr of rtoList">
+             <!-- <ng-container *ngIf="itr.indexOf(rtoSearch) > -1"> -->
+               <li (click)="policyFormData.rto = itr">{{itr}}</li>
+             <!-- </ng-container> -->
+             </ng-container>
+           </ul>
+         </div>
+  <div class="dropdown policy-form-dropdown">
+   <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" (click)="policyFormData.vehicleMake = ''">
+     <ng-container *ngIf="policyFormData.vehicleMake">
+       {{policyFormData.vehicleMake}}
+       </ng-container>
+       <ng-container *ngIf="policyFormData.vehicleMake == ''">
+         Car Make
+         </ng-container>
+   <span class="caret"></span>
+  </button>
+   <ul role="listbox" class="dropdown-menu policy-form-d-menu">
+     <div class="policy-form-d-menu-div">
+       <input type="text" class="hiddenSearch" [(ngModel)]="policyFormData.search" placeholder="Car Model" (input)="getSearchData(policyFormData.search);$event.stopPropagation();">
+       <div class="policy-form-d-scrollable-div">
+     <ng-container *ngFor="let itr of searchedCar;index as idx">
+       <li (click)="policyFormData.vehicleMake = itr.Value">{{itr.Value}}</li>
+     </ng-container>
+     </div>
+     </div>
+     </ul>
+  </div>
+  <div class="dropdown policy-form-dropdown">
+   <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+     <ng-container *ngIf="policyFormData.fuelType != ''">
+       {{policyFormData.fuelType}}
+       </ng-container>
+       <ng-container *ngIf="policyFormData.fuelType == ''">
+         Fuel Type
+       </ng-container>
+   <span class="caret"></span></button>
+   <ul role="listbox" class="dropdown-menu policy-form-d-menu">
+     <ng-container *ngFor="let itr of fuelType">
+       <!-- <ng-container *ngIf="itr.indexOf(rtoSearch) > -1"> -->
+         <li (click)="policyFormData.fuelType = itr">{{itr}}</li>
+       <!-- </ng-container> -->
+       </ng-container>
+     </ul>
+  </div>
+
+  <ng-container *ngIf="insurranceType != 0">
+  <div class="dropdown policy-form-dropdown">
+   <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+     <ng-container *ngIf="policyFormData.manufactureYear != ''">
+       {{policyFormData.manufactureYear}}
+       </ng-container>
+       <ng-container *ngIf="policyFormData.manufactureYear == ''">
+         Manufacture year
+       </ng-container>
+   <span class="caret"></span></button>
+   <ul role="listbox" class="dropdown-menu policy-form-d-menu">
+     <ng-container *ngFor="let itr of manufactureYear">
+       <!-- <ng-container *ngIf="itr.indexOf(rtoSearch) > -1"> -->
+         <li (click)="policyFormData.manufactureYear = itr">{{itr}}</li>
+       <!-- </ng-container> -->
+       </ng-container>
+     </ul>
+  </div>
+  </ng-container>
+<ng-container *ngIf="insurranceType != 2">
+  <div class="dropdown policy-form-dropdown">
+   <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+     <ng-container *ngIf="policyFormData.previousPolicy != ''">
+       {{policyFormData.previousPolicy}}
+       </ng-container>
+       <ng-container *ngIf="policyFormData.previousPolicy == ''">
+         Previous Policy
+       </ng-container>
+   <span class="caret"></span></button>
+   <ul role="listbox" class="dropdown-menu policy-form-d-menu">
+     <ng-container *ngFor="let itr of policyInsurance">
+       <!-- <ng-container *ngIf="itr.indexOf(rtoSearch) > -1"> -->
+         <li (click)="policyFormData.previousPolicy = itr">{{itr}}</li>
+       <!-- </ng-container> -->
+       </ng-container>
+     </ul>
+  </div>
+  </ng-container>
+     </div>
+     </ng-container>
+     <ng-container *ngIf="vehicleType == 1">
+   <div class="policy-form">
+     <div class="dropdown policy-form-dropdown">
+      <button class="btn dropdown-toggle rtoBtn" type="button" data-toggle="dropdown">
+        <ng-container *ngIf="policyFormData.rto != ''">
+          {{policyFormData.rto}}
+          </ng-container>
+          <ng-container *ngIf="policyFormData.rto == ''">
+            RTO
+          </ng-container>
+        <span class="caret"></span>
+      </button>
+      <ul role="listbox" class="dropdown-menu policy-form-d-menu">
+        <ng-container *ngFor="let itr of rtoList">
+          <!-- <ng-container *ngIf="itr.indexOf(rtoSearch) > -1"> -->
+            <li (click)="policyFormData.rto = itr">{{itr}}</li>
+          <!-- </ng-container> -->
+          </ng-container>
+        </ul>
+      </div>
+<div class="dropdown policy-form-dropdown">
+<button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+  <ng-container *ngIf="policyFormData.vehicleMake != ''">
+    {{policyFormData.vehicleMake}}
+    </ng-container>
+    <ng-container *ngIf="policyFormData.vehicleMake == ''">
+      Bike Make
+    </ng-container>
+<span class="caret"></span></button>
+<ul role="listbox" class="dropdown-menu policy-form-d-menu">
+  <ng-container *ngFor="let itr of bikeMake">
+    <!-- <ng-container *ngIf="itr.indexOf(rtoSearch) > -1"> -->
+      <li (click)="policyFormData.vehicleMake = itr.make + '' + itr.model">{{itr.make}} {{itr.model}}</li>
+    <!-- </ng-container> -->
+    </ng-container>
+  </ul>
+</div>
+<div class="dropdown policy-form-dropdown">
+<button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+  <ng-container *ngIf="policyFormData.fuelType != ''">
+    {{policyFormData.fuelType}}
+    </ng-container>
+    <ng-container *ngIf="policyFormData.fuelType == ''">
+      Fuel Type
+    </ng-container>
+<span class="caret"></span></button>
+<ul role="listbox" class="dropdown-menu policy-form-d-menu">
+  <ng-container *ngFor="let itr of fuelType">
+    <!-- <ng-container *ngIf="itr.indexOf(rtoSearch) > -1"> -->
+      <li (click)="policyFormData.fuelType = itr">{{itr}}</li>
+    <!-- </ng-container> -->
+    </ng-container>
+  </ul>
+</div>
+<div class="dropdown policy-form-dropdown">
+<button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+  <ng-container *ngIf="policyFormData.manufactureYear != ''">
+    {{policyFormData.manufactureYear}}
+    </ng-container>
+    <ng-container *ngIf="policyFormData.manufactureYear == ''">
+      Manufacture year
+    </ng-container>
+<span class="caret"></span></button>
+<ul role="listbox" class="dropdown-menu policy-form-d-menu">
+  <ng-container *ngFor="let itr of manufactureYear">
+    <!-- <ng-container *ngIf="itr.indexOf(rtoSearch) > -1"> -->
+      <li (click)="policyFormData.manufactureYear = itr">{{itr}}</li>
+    <!-- </ng-container> -->
+    </ng-container>
+  </ul>
+</div>
+
+<div class="dropdown policy-form-dropdown">
+<button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+  <ng-container *ngIf="policyFormData.previousPolicy != ''">
+    {{policyFormData.previousPolicy}}
+    </ng-container>
+    <ng-container *ngIf="policyFormData.previousPolicy == ''">
+      Previous Policy
+    </ng-container>
+<span class="caret"></span></button>
+<ul role="listbox" class="dropdown-menu policy-form-d-menu">
+  <ng-container *ngFor="let itr of policyInsurance">
+    <!-- <ng-container *ngIf="itr.indexOf(rtoSearch) > -1"> -->
+      <li (click)="policyFormData.previousPolicy = itr">{{itr}}</li>
+    <!-- </ng-container> -->
+    </ng-container>
+  </ul>
+</div>
+  </div>
+  </ng-container>
+  <ng-container *ngIf="vehicleType == 2">
+<div class="policy-form">
+  <div class="dropdown policy-form-dropdown">
+   <button class="btn dropdown-toggle rtoBtn" type="button" data-toggle="dropdown">
+     <ng-container *ngIf="policyFormData.rto != ''">
+       {{policyFormData.rto}}
+       </ng-container>
+       <ng-container *ngIf="policyFormData.rto == ''">
+         RTO
+       </ng-container>
+     <span class="caret"></span>
+   </button>
+   <ul role="listbox" class="dropdown-menu policy-form-d-menu">
+     <ng-container *ngFor="let itr of rtoList">
+       <!-- <ng-container *ngIf="itr.indexOf(rtoSearch) > -1"> -->
+         <li (click)="policyFormData.rto = itr">{{itr}}</li>
+       <!-- </ng-container> -->
+       </ng-container>
+     </ul>
+   </div>
+<div class="dropdown policy-form-dropdown">
+<button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+<ng-container *ngIf="policyFormData.vehicleMake != ''">
+ {{policyFormData.vehicleMake}}
+ </ng-container>
+ <ng-container *ngIf="policyFormData.vehicleMake == ''">
+   Car Model
+ </ng-container>
+<span class="caret"></span></button>
+<ul role="listbox" class="dropdown-menu policy-form-d-menu">
+<ng-container *ngFor="let itr of carMake">
+ <!-- <ng-container *ngIf="itr.indexOf(rtoSearch) > -1"> -->
+   <li (click)="policyFormData.vehicleMake = itr.Value">{{itr.Value}}</li>
+ <!-- </ng-container> -->
+ </ng-container>
+</ul>
+</div>
+<div class="dropdown policy-form-dropdown">
+<button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+<ng-container *ngIf="policyFormData.fuelType != ''">
+ {{policyFormData.fuelType}}
+ </ng-container>
+ <ng-container *ngIf="policyFormData.fuelType == ''">
+   Fuel Type
+ </ng-container>
+<span class="caret"></span></button>
+<ul role="listbox" class="dropdown-menu policy-form-d-menu">
+<ng-container *ngFor="let itr of fuelType">
+ <!-- <ng-container *ngIf="itr.indexOf(rtoSearch) > -1"> -->
+   <li (click)="policyFormData.fuelType = itr">{{itr}}</li>
+ <!-- </ng-container> -->
+ </ng-container>
+</ul>
+</div>
+<div class="dropdown policy-form-dropdown">
+<button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+<ng-container *ngIf="policyFormData.manufactureYear != ''">
+ {{policyFormData.manufactureYear}}
+ </ng-container>
+ <ng-container *ngIf="policyFormData.manufactureYear == ''">
+   Manufacture year
+ </ng-container>
+<span class="caret"></span></button>
+<ul role="listbox" class="dropdown-menu policy-form-d-menu">
+<ng-container *ngFor="let itr of manufactureYear">
+ <!-- <ng-container *ngIf="itr.indexOf(rtoSearch) > -1"> -->
+   <li (click)="policyFormData.manufactureYear = itr">{{itr}}</li>
+ <!-- </ng-container> -->
+ </ng-container>
+</ul>
+</div>
+
+<div class="dropdown policy-form-dropdown">
+<button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+<ng-container *ngIf="policyFormData.previousPolicy != ''">
+ {{policyFormData.previousPolicy}}
+ </ng-container>
+ <ng-container *ngIf="policyFormData.previousPolicy == ''">
+   Previous Policy
+ </ng-container>
+<span class="caret"></span></button>
+<ul role="listbox" class="dropdown-menu policy-form-d-menu">
+<ng-container *ngFor="let itr of policyInsurance">
+ <!-- <ng-container *ngIf="itr.indexOf(rtoSearch) > -1"> -->
+   <li (click)="policyFormData.previousPolicy = itr">{{itr}}</li>
+ <!-- </ng-container> -->
+ </ng-container>
+</ul>
+</div>
+</div>
+</ng-container>
+     <button type="button" name="button" class="btn btn-danger" (click)="submitQuotes()">Submit</button>
+     </div>
+</ng-container>
+
+
+<ng-container *ngIf="currentUser.role == 'organizer'">
+  ﻿<h1>Pending Leads</h1>
+  <div *ngFor="let user of users;index as idx">
+    <div class="mainLeadCard">
+    <div class="leadCard">
+      <div><b>Policy No:</b> &nbsp;{{idx}}</div>
+      <div><b>Issued By : </b>&nbsp;{{user.firstName}}</div>
+      <div><b>Date of Issue : </b>&nbsp;{{user.createdDate | date}}</div>
+    </div>
+    <button type="button" name="button" class="mainLeadBtn">Assign</button>
+    </div>
+    </div>
+</ng-container>

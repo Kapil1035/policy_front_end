@@ -1,0 +1,371 @@
+<style media="screen">
+  .getQuotesDiv{
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-row-gap: 10px;
+  }
+  .getQuotesDiv1{
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-row-gap: 10px;
+    margin:10px 0px;
+  }
+  .fetchQuotesDiv{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 30px 0px;
+  }
+  .fetchQuotesDiv .card{
+    border:1px solid;
+    border-radius:4px;
+    width:300px;
+  }
+  .fetchQuotesDiv .card-body{
+    display:flex;
+    align-item:center;
+    justify-content:center;
+    margin:20px;
+  }
+  .showModal{
+    display:block!important;
+  }
+  .modal-dialog{
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .modal-row{
+    display:flex;
+    align-item:center;
+    justify-content:space-between;
+    margin:10px 20px;
+  }
+  .backdrop {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: black;
+    opacity: 0.5;
+    z-index:10;
+}
+.showMore{
+  cursor:pointer;
+}
+.card:hover{
+  background:#f3f3f3;
+  border:2px solid #ccc;
+}
+.list-group-item{
+  background:transparent;
+}
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+.policy-subheader{
+  padding:5px;
+  display: grid;
+grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+background-color: #ebebeb;
+position:relative;
+}
+.policy-subheader button{
+  background-color: #fff;
+border: 1px dashed #ccc;
+}
+.add-on-dropdown{
+  width: 400px;
+}
+.add-on-dropdown ul{
+  margin: 0px;
+  list-style: none;
+  padding: 0px 8px;
+  max-height:150px;
+  overflow:auto;
+}
+.add-on-dropdown ul li > input{
+  padding-left:4px;
+  /* display:flex; */
+}
+.add-on-li input{
+  margin-right: 8px;
+}
+.insurer{
+  display:flex;
+}
+.submit-btn{
+  position: absolute;
+  right: 0px;
+  top: 2px;
+  height: 90%;
+  width: 120px;
+}
+</style>
+<h1>Get Quotes</h1>
+<ng-container *ngIf="currentUser">
+<div class="modal showModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Vehicle Details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-row">
+        <div>Registartion Date</div>
+        <div class="dropdown policy-form-dropdown">
+        <input type="date" name="" value="" [(ngModel)]="secondaryDetails.registrationDate">
+        </div>
+        </div>
+
+        <div class="modal-row">
+        <div>Manufacturing Date</div>
+        <div class="dropdown policy-form-dropdown">
+        <input type="date" name="" value="" [(ngModel)]="secondaryDetails.manufacturingDate">
+        </div>
+        </div>
+
+        <div class="modal-row">
+        <div>Previous Policy Expiry Date</div>
+        <div class="dropdown policy-form-dropdown">
+        <input type="date" name="" value="" [(ngModel)]="secondaryDetails.previousPolicyExpiry">
+        </div>
+        </div>
+
+        <div class="modal-row">
+        <div>Previous policy claimed</div>
+        <div class="dropdown policy-form-dropdown">
+          <label class="switch">
+            <input type="checkbox" [(ngModel)]="secondaryDetails.previousPolicyClaimed">
+            <span class="slider round"></span>
+          </label>
+        </div>
+        </div>
+
+        <div class="modal-row">
+        <div>No Claim Bonus (NCB)</div>
+        <div class="dropdown policy-form-dropdown">
+        <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+        <ng-container *ngIf="secondaryDetails.ncb != ''">
+         {{secondaryDetails.ncb}}
+         </ng-container>
+         <ng-container *ngIf="secondaryDetails.ncb == ''">
+           NCB
+         </ng-container>
+        <span class="caret"></span>
+      </button>
+        <ul role="listbox" class="dropdown-menu policy-form-d-menu">
+        <ng-container *ngFor="let itr of ncbAmount">
+         <!-- <ng-container *ngIf="itr.indexOf(rtoSearch) > -1"> -->
+           <li (click)="secondaryDetails.ncb = itr">{{itr}}</li>
+         <!-- </ng-container> -->
+         </ng-container>
+        </ul>
+        </div>
+        </div>
+        <!-- ___ -->
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="handleQuotesData()">Get Quotes</button>
+      </div>
+    </div>
+  </div>
+</div>
+</ng-container>
+<div class="backdrop" *ngIf="currentUser"></div>
+<!-- Collapse buttons -->
+<div>
+  <div class="getQuotesDiv1" [ngClass]="{'fade':currentUser}">
+    <div><b>RTO</b> : {{userService.data.rto}}</div>
+    <div><b>Registartion Date</b> : {{secondaryDetails.registrationDate}}</div>
+    <div><b>Manufacture Date</b> : {{secondaryDetails.manufacturingDate}}</div>
+  <div data-toggle="collapse" data-target="#collapseExample"
+    aria-expanded="false" aria-controls="collapseExample">
+    <b class="showMore">Show more ˬ</b>
+    </div>
+  </div>
+</div>
+<!-- / Collapse buttons -->
+
+<!-- Collapsible element -->
+<div class="collapse" id="collapseExample">
+  <div class="mt-3">
+    <div class="getQuotesDiv" [ngClass]="{'fade':currentUser}">
+    <div><b>Vehicle Make</b> :{{userService.data.vehicleMake}}</div>
+    <div><b>Fuel Type</b> :{{userService.data.fuelType}}</div>
+    <div><b>Variant</b> : {{userService.data.vehicleVariant}}</div>
+    <div><b>Year of Manufacture</b> :{{userService.data.manufactureYear}}</div>
+    <div><b>Policy Insurance</b> : {{userService.data.previousPolicy}}</div>
+    <div><b>NCB</b> : {{secondaryDetails.ncb}}</div>
+    <div><b>Policy Expiry Date</b> : {{secondaryDetails.previousPolicyExpiry}}</div>
+    </div>
+  </div>
+</div>
+<!-- / Collapsible element -->
+<div class="policy-subheader">
+  <div class="dropdown">
+    <button type="button" class="btn dropdown-toggle" name="button" data-toggle="dropdown">Add Ons
+      <span class="caret"></span>
+    </button>
+    <div class="dropdown-menu add-on-dropdown">
+  <ul>
+    <li class="add-on-li"><div class="arr-wrap">
+      <div class="arw"></div>
+    </div>Select All</li>
+    <li class="add-on-li"><div class="arr-wrap">
+      <div class="arw"></div>
+    </div>Bajaj Allianz General Insurance Company Ltd</li>
+    <li class="add-on-li"><div class="arr-wrap">
+      <div class="arw"></div>
+    </div>Cholamandalam MS General Insurance Company Ltd</li>
+    <li class="add-on-li"><div class="arr-wrap">
+      <div class="arw"></div>
+    </div>Iffco Tokio</li>
+    <li class="add-on-li"><div class="arr-wrap">
+      <div class="arw"></div>
+    </div>National Insurance</li>
+    <li class="add-on-li"><div class="arr-wrap">
+      <div class="arw"></div>
+    </div>New India Assurance</li>
+    <li class="add-on-li"><div class="arr-wrap">
+      <div class="arw"></div>
+    </div>Oriental</li>
+    <li class="add-on-li"><div class="arr-wrap">
+      <div class="arw"></div>
+    </div>Reliance General Insurance Company Ltd</li>
+    <li class="add-on-li"><div class="arr-wrap">
+      <div class="arw"></div>
+    </div>Shriram General Insurance</li>
+    <li class="add-on-li"><div class="arr-wrap">
+      <div class="arw"></div>
+    </div>United India Insurance Company Ltd</li>
+    </ul>
+    </div>
+
+  </div>
+
+<div class="dropdown">
+  <button type="button" class="btn dropdown-toggle" name="button" data-toggle="dropdown">Add Ons
+    <span class="caret"></span>
+  </button>
+  <div class="dropdown-menu add-on-dropdown">
+<ul><li class="add-on-li"><div class="arr-wrap"><div class="arw"></div></div><input type="checkbox" id="IsZD" value="Zero Depreciation"><label for="IsZD" data-tip="Also called 'Nil Depreciation' cover or 'Bumper-to-Bumper' cover. An add-on which gives you complete cover on any body parts of the car excluding tyres and batteries. Insurer will pay entire cost of body parts, ignoring the year-on-year depreciation in value of these parts." data-for="IsZD_tooltip" currentitem="false">Zero Depreciation</label><div class="__react_component_tooltip place-left type-dark " id="IsZD_tooltip" data-id="tooltip"></div></li><li class="add-on-li"><div class="arr-wrap"><div class="arw"></div></div><input type="checkbox" id="IsRSA" value="24x7 Roadside Assistance"><label for="IsRSA" data-tip="An add-on which provides various services in emergency situations e.g. flat tyre repair, fuel delivery, breakdown repair services, car towing, minor servicing etc. on the road." data-for="IsRSA_tooltip" currentitem="false">24x7 Roadside Assistance</label><div class="__react_component_tooltip place-left type-dark " id="IsRSA_tooltip" data-id="tooltip" style="left: 369px; top: 220px;">An add-on which provides various services in emergency situations e.g. flat tyre repair, fuel delivery, breakdown repair services, car towing, minor servicing etc. on the road.</div></li><li class="add-on-li"><div class="arr-wrap"><div class="arw"></div></div><input type="checkbox" id="IsEP" value="Engine Protection Cover"><label for="IsEP" data-tip="An add-on which covers expenses for repair/replacement of your damaged engine or its damaged parts like pistons and connecting rods in case of oil leakage or water ingression." data-for="IsEP_tooltip" currentitem="false">Engine Protection Cover</label><div class="__react_component_tooltip place-left type-dark " id="IsEP_tooltip" data-id="tooltip" style="left: 365px; top: 255px;">An add-on which covers expenses for repair/replacement of your damaged engine or its damaged parts like pistons and connecting rods in case of oil leakage or water ingression.</div></li><li class="add-on-li"><div class="arr-wrap"><div class="arw"></div></div><input type="checkbox" id="IsNCB" value="NCB Protector"><label for="IsNCB" data-tip="An add-on which allows you to protect your No Claim Bonus (NCB) even after you've made a claim in the existing policy. This is only applicable when you renew with the same insurer next year." data-for="IsNCB_tooltip" currentitem="false">NCB Protector</label><div class="__react_component_tooltip place-left type-dark " id="IsNCB_tooltip" data-id="tooltip"></div></li><li class="add-on-li"><div class="arr-wrap"><div class="arw"></div></div><input type="checkbox" id="IsKLR" value="Key &amp; Lock Replacement"><label for="IsKLR" data-tip="An add-on which covers your cost to replace your car keys and locks or the locksmith charges if your car keys are stolen." data-for="IsKLR_tooltip" currentitem="false">Key &amp; Lock Replacement</label><div class="__react_component_tooltip place-left type-dark " id="IsKLR_tooltip" data-id="tooltip" style="left: 378px; top: 318px;">An add-on which covers your cost to replace your car keys and locks or the locksmith charges if your car keys are stolen.</div></li><li class="add-on-li"><div class="arr-wrap"><div class="arw"></div></div><input type="checkbox" id="IsCOC" value="Consumables"><label for="IsCOC" data-tip="Consumables are materials that need to be replaced or refilled frequently – like nuts, bolts, screws, engine oil and coolant – and once used are consumed completely. This add-on covers your expenses for replacing or refilling the consumables in the event of an accident." data-for="IsCOC_tooltip" currentitem="false">Consumables</label><div class="__react_component_tooltip place-left type-dark " id="IsCOC_tooltip" data-id="tooltip"></div></li><li class="add-on-li"><div class="arr-wrap"><div class="arw"></div></div><input type="checkbox" id="IsDAC" value="Daily Allowance"><label for="IsDAC" data-tip="An add-on which compensates you for the cost of hiring an alternative vehicle in case your car is under repair." data-for="IsDAC_tooltip" currentitem="false">Daily Allowance</label><div class="__react_component_tooltip place-left type-dark " id="IsDAC_tooltip" data-id="tooltip" style="left: 311px; top: 377px;">An add-on which compensates you for the cost of hiring an alternative vehicle in case your car is under repair.</div></li><li class="add-on-li"><div class="arr-wrap"><div class="arw"></div></div><input type="checkbox" id="IsINPC" value="Invoice Price"><label for="IsINPC" data-tip="Also called 'Return to Invoice'. An add-on that ensures you get the original invoice value of the car and not the current IDV in case of theft or total loss. You get the original invoice value including registration charges and road tax paid." data-for="IsINPC_tooltip" currentitem="false">Invoice Price</label><div class="__react_component_tooltip place-left type-dark " id="IsINPC_tooltip" data-id="tooltip" style="left: 332px; top: 376px;">Also called 'Return to Invoice'. An add-on that ensures you get the original invoice value of the car and not the current IDV in case of theft or total loss. You get the original invoice value including registration charges and road tax paid.</div></li><li class="add-on-li"><input type="checkbox" id="IsTC" value="Tyre Protector"><label for="IsTC" data-tip="" data-for="IsTC_tooltip" currentitem="false">Tyre Protector</label><div class="__react_component_tooltip place-left type-dark " id="IsTC_tooltip" data-id="tooltip"></div></li><li class="add-on-li"><input type="checkbox" id="IsRDC" value="RIM Damage Cover"><label for="IsRDC" data-tip="" data-for="IsRDC_tooltip" currentitem="false">RIM Damage Cover</label><div class="__react_component_tooltip place-left type-dark " id="IsRDC_tooltip" data-id="tooltip"></div></li><li class="add-on-li"><div class="arr-wrap"><div class="arw"></div></div><input type="checkbox" id="IsLPB" value="Loss of Personal Belongings"><label for="IsLPB" data-tip="An add-on which covers loss of personal belongings (baggage, clothes, bag etc.) belonging to you and your dependent family members due to car theft or break-in. Claim limit will be as per Insurer norms." data-for="IsLPB_tooltip" currentitem="false">Loss of Personal Belongings</label><div class="__react_component_tooltip place-left type-dark " id="IsLPB_tooltip" data-id="tooltip" style="left: 285px; top: 475px;">An add-on which covers loss of personal belongings (baggage, clothes, bag etc.) belonging to you and your dependent family members due to car theft or break-in. Claim limit will be as per Insurer norms.</div></li></ul>
+  </div>
+
+</div>
+<button type="button" name="button" class="btn btn-danger submit-btn">Submit</button>
+</div>
+
+
+<div class="fetchQuotesDiv" [ngClass]="{'fade':currentUser}">
+  <div class="card" style="width: 300px;">
+  <div class="card-body">
+    <h5 class="card-title">Policy Issue 1</h5>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">Cras justo odio</li>
+    <li class="list-group-item">Dapibus ac facilisis in</li>
+    <li class="list-group-item">Vestibulum at eros</li>
+  </ul>
+  <div class="card-body">
+    <button type="button" class="btn btn-danger" name="button" routerLink="../info">1200 RS</button>
+  </div>
+</div>
+<div class="card" style="width: 300px;">
+  <div class="card-body">
+    <h5 class="card-title">Policy Issue 2</h5>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">Cras justo odio</li>
+    <li class="list-group-item">Dapibus ac facilisis in</li>
+    <li class="list-group-item">Vestibulum at eros</li>
+  </ul>
+  <div class="card-body">
+    <button type="button" class="btn btn-danger" name="button" routerLink="../info">1316 RS</button>
+  </div>
+</div>
+<div class="card" style="width: 300px;">
+  <div class="card-body">
+    <h5 class="card-title">Policy Issue 3</h5>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">Cras justo odio</li>
+    <li class="list-group-item">Dapibus ac facilisis in</li>
+    <li class="list-group-item">Vestibulum at eros</li>
+  </ul>
+  <div class="card-body">
+    <button type="button" class="btn btn-danger" name="button" routerLink="../info">1500 RS</button>
+  </div>
+</div>
+  </div>
