@@ -15,24 +15,33 @@ import { LandingComponent } from './landing/landing.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { MainContentComponent } from './main-content/main-content.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';;
+import { SliderComponent } from './slider/slider.component';
+// import { NgImageSliderModule } from 'ng-image-slider';
+// import {CarouselModule} from '@coreui/angular';
+// import { CarouselModule } from '@coreui/angular';
+
+
 @NgModule({
     imports: [
         BrowserModule,
         FormsModule,
         ReactiveFormsModule,
         HttpClientModule,
-        AppRoutingModule
+        AppRoutingModule,
+        // NgImageSliderModule
+        // CarouselModule,
     ],
     declarations: [
         AppComponent,
         AlertComponent,
-        HomeComponent
-,
+        HomeComponent,
         LandingComponent ,
         HeaderComponent ,
+        SliderComponent,
         FooterComponent ,
-        MainContentComponent ],
+        MainContentComponent ,
+        ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }

@@ -1,9 +1,10 @@
 <style>
   .header{
+    padding: 10px;
     display: flex;
     height: 60px;
-    background-color: #333;
-    color: #fff;
+    background-color: rgb(245,245,245);
+    /* color: #fff; */
     align-items: center;
     justify-content: space-between;
   }
@@ -21,6 +22,14 @@
     position: absolute;
     left: 10px;
   }
+  .header-logo+a{
+    font-size: 28px;
+    text-decoration: none;
+    font-weight: 800;
+    position: absolute;
+    left: 50px;
+    color: #057cd9;
+  }
   a{
     color:#fff;
     text-decoration:none;
@@ -30,37 +39,59 @@
 display: flex;
 align-items: center;
 flex-direction: column;
+position: absolute;
+    right: 0px;
+  }
+  .login-container{
+    width: 50vw;
+    height: 500px;
+    margin: auto;
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 50% 50%;
+    /* border: 1px solid black; */
+    margin-top: 5%;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   }
   .login-form{
-    padding: 10px;
-    width: 100%;
+    padding-left: 7%;
     display: flex;
     align-items: center;
     justify-content: center;
-    height: calc(100vh - 60px);
+    /* height: calc(100vh - 60px); */
     flex-direction: column;
     background-color: #f5f5f5;
     flex:1;
   }
-  .login-container{
-    display:flex;
-    align-items:center;
+ 
+  .form-group{
+    width: 90%;
+    float: left;
   }
-  .login-image{
-    flex: 1;
-background-image: url(/assets/logo.png);
-background-size: contain;
-height: calc(100vh - 60px);
-background-repeat: no-repeat;
-background-position: center;
+  .form-group input{
+    width: 95%;
+    margin: auto;
   }
-  .login-container{
-    display:flex;
+  .login-image>img{
+     width: 100%;
+     height: 100%;
   }
   .register-btn{
-    background: #f3f3;
+    background: rgb(47,113,169);
 border-radius: 5px;
 font-size:12px;
+font-weight: 600;
+  }
+  @media screen and (max-width:520px) {
+    .login-container{
+      grid-template-rows: 30% 70%;
+      grid-template-columns: 1fr;
+      height: fit-content;
+      padding: 1%;
+    }
+    .header-logo+a{
+      font-size: 22px;
+    }
   }
 </style>
 
@@ -70,8 +101,9 @@ font-size:12px;
 
 <div class="header">
 
-  <div class="header-logo">
+  <div class="header-logo" routerLink="../home">
   </div>
+  <a href="./layout.component.html">EXPERIYA</a>
 
   <div class="header-signup">
     Alerady have an account  ?
@@ -83,6 +115,7 @@ font-size:12px;
   </div>
 ﻿<div class="card login-container">
   <div class="login-image">
+    <img src="/assets/logo.png" alt="" srcset="">
     </div>
     <div class="card-body login-form">
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
